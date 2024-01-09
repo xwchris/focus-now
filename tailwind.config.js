@@ -6,7 +6,11 @@ export default {
     'node_modules/preline/dist/*.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        'card': 'rgba(0, 0, 0, 0.1) 0px 0px 15px',
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

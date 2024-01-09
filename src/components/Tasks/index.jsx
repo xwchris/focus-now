@@ -2,17 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import Task from "../Task";
+import FocusPanel from "../FocusPanel";
 
 const emptyTask = { id: -1, text: "", completed: false };
 
 const Tasks = ({ tasks, setTasks }) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
-  const [selectTaskId, setSelectTaskId] = useState(null);
+  const [launchTask, setLaunchTask] = useState(null);
 
   useEffect(() => {
     const handleClick = () => {
       setExpandedTaskId(null);
-      setSelectTaskId(null);
     };
 
     window.addEventListener("click", handleClick);
@@ -45,31 +45,49 @@ const Tasks = ({ tasks, setTasks }) => {
     }
   };
 
+  const onChangeTaskTime = (newTime) => {
+    const targetTask = tasks.find((task) => task.id === launchTask.id);
+    if (targetTask) {
+      targetTask.focusSeconds = newTime;
+    }
+    // TODO - this is not working
+    // onTaskChange(launchTask);
+  };
+
   const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="tasks">
-        {(provided) => (
-          <ul {...provided.droppableProps} ref={provided.innerRef}>
-            {realTasks.map((task, index) => (
-              <Task
-                onTaskChange={onTaskChange}
-                isExpanded={task.id === expandedTaskId}
-                onExpand={() => setExpandedTaskId(task.id)}
-                onCloseExpand={() => setExpandedTaskId(null)}
-                isSelected={task.id === selectTaskId}
-                onSelect={() => setSelectTaskId(task.id)}
-                key={task.id}
-                task={task}
-                index={index}
-              />
-            ))}
-            {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="tasks">
+          {(provided) => (
+            <ul {...provided.droppableProps} ref={provided.innerRef}>
+              {realTasks.map((task, index) => (
+                <Task
+                  onTaskChange={onTaskChange}
+                  isExpanded={task.id === expandedTaskId}
+                  onExpand={() => setExpandedTaskId(task.id)}
+                  onCloseExpand={() => setExpandedTaskId(null)}
+                  onLaunch={() => setLaunchTask(task)}
+                  key={task.id}
+                  task={task}
+                  index={index}
+                />
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
+      {launchTask && (
+        <FocusPanel
+          task={launchTask}
+          onTaskChange={onTaskChange}
+          onClose={() => setLaunchTask(null)}
+          onChangeTaskTime={onChangeTaskTime}
+        />
+      )}
+    </>
   );
 };
 
