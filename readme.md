@@ -14,7 +14,7 @@ Focus Now 是一个更好的待办事项 Web 应用程序，它可以帮助你�
 首先，克隆这个仓库：
 
 ```bash
-git clone https://github.com/yourusername/focus-now.git
+git clone https://github.com/xwchris/focus-now.git
 ```
 
 然后，进入项目目录并安装依赖：
@@ -26,10 +26,10 @@ npm install
 
 最后，启动开发服务器：
 ```bash
-npm start
+npm dev
 ```
 
-现在，你应该可以在 `http://localhost:3000` 看到应用程序。
+现在，你应该可以在 `http://localhost:5173` 看到应用程序。
 
 ## 技术栈
 - React
