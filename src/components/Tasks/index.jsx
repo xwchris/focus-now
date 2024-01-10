@@ -12,6 +12,10 @@ const Tasks = ({ tasks, setTasks }) => {
 
   useEffect(() => {
     const handleClick = () => {
+      // find current expanded task
+      const expandedTask = tasks.find((task) => task.id === expandedTaskId);
+      // if expanded task is loading, do nothing
+      if (expandedTask && expandedTask.loading) return;
       setExpandedTaskId(null);
     };
 
@@ -20,7 +24,7 @@ const Tasks = ({ tasks, setTasks }) => {
     return () => {
       window.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [expandedTaskId]);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -54,7 +58,8 @@ const Tasks = ({ tasks, setTasks }) => {
     // onTaskChange(launchTask);
   };
 
-  const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
+  // const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
+  const realTasks = useMemo(() => [...tasks], [tasks]);
 
   return (
     <>

@@ -3,7 +3,7 @@ import Tasks from "../../components/Tasks";
 
 const Today = () => {
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Task 1", completed: false },
+    { id: 1, text: "好好学习", completed: false },
     { id: 2, text: "Task 2", completed: true },
     { id: 3, text: "Task 3", completed: false },
   ]);
