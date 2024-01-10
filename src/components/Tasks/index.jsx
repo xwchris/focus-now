@@ -58,8 +58,7 @@ const Tasks = ({ tasks, setTasks }) => {
     // onTaskChange(launchTask);
   };
 
-  // const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
-  const realTasks = useMemo(() => [...tasks], [tasks]);
+  const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
 
   return (
     <>

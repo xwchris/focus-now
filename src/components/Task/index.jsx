@@ -201,9 +201,9 @@ const TaskElement = ({
             <AIICon
               id="hs-dropdown-hover-event"
               className={`hs-dropdown-toggle ml-4 w-5 h-5 cursor-pointer transition-colors ${
-                (task.text || "").length > 0
+                (task.text || "").length > 0 || !isEditable
                   ? "text-blue-600 hover:text-blue-500"
-                  : "text-slate-500"
+                  : "hidden"
               } ${loading ? "hidden" : ""}`}
             />
             <div
