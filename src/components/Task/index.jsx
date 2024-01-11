@@ -123,8 +123,8 @@ const TaskElement = ({
   };
 
   const onCreateSubtask = (subtaskId) => {
-    const index = task.subtasks.findIndex((task) => task.id === subtaskId);
     const subtasks = [...(task.subtasks || [])];
+    const index = subtasks.findIndex((task) => task.id === subtaskId);
     const nextIndex = index === -1 ? subtasks.length : index + 1;
     const newTask = { id: Date.now() };
     focusSubtaskIdRef.current = newTask.id;
