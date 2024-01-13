@@ -6,7 +6,7 @@ import FocusPanel from "../FocusPanel";
 
 const emptyTask = { id: -1, text: "", completed: false };
 
-const Tasks = ({ tasks, setTasks }) => {
+const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [launchTask, setLaunchTask] = useState(null);
 
@@ -36,19 +36,6 @@ const Tasks = ({ tasks, setTasks }) => {
     setTasks(items);
   };
 
-  const onTaskChange = (newTask) => {
-    const newTasks = [...tasks];
-    if (newTask.id === -1) {
-      newTasks.push({ ...newTask, id: Date.now() });
-      setTasks(newTasks);
-      return;
-    } else {
-      const index = newTasks.findIndex((task) => task.id === newTask.id);
-      newTasks[index] = newTask;
-      setTasks(newTasks);
-    }
-  };
-
   const onChangeTaskTime = (newTime) => {
     const targetTask = tasks.find((task) => task.id === launchTask.id);
     if (targetTask) {
@@ -69,6 +56,7 @@ const Tasks = ({ tasks, setTasks }) => {
               {realTasks.map((task, index) => (
                 <Task
                   onTaskChange={onTaskChange}
+                  onTaskDelete={onTaskDelete}
                   isExpanded={task.id === expandedTaskId}
                   onExpand={() => setExpandedTaskId(task.id)}
                   onCloseExpand={() => setExpandedTaskId(null)}

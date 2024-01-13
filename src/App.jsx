@@ -19,8 +19,8 @@ function App() {
       <SideBar />
       <Routes>
         <Route exact path="/" element={<Today />} />
-        <Route exact path="/tomorrow" element={<Tomorrow />} />
-        <Route exact path="/after" element={<After />} />
+        {/* <Route exact path="/tomorrow" element={<Tomorrow />} />
+        <Route exact path="/after" element={<After />} /> */}
       </Routes>
     </>
   );

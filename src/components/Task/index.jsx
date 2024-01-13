@@ -3,8 +3,10 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import TextareaAutosize from "react-textarea-autosize";
 import ListIcon from "./icons/list.svg?react";
+import DeleteIcon from "./icons/delete.svg?react";
 import RocketIcon from "./icons/rocket.svg?react";
 import AIICon from "./icons/ai.svg?react";
+import EneterIcon from "./icons/enter.svg?react";
 import Subtask from "../Subtask";
 import apis from "../../apis";
 
@@ -17,6 +19,7 @@ const defaultProvided = {
 const TaskElement = ({
   task,
   onTaskChange,
+  onTaskDelete,
   isPure,
   isExpanded = false,
   isEditable = false,
@@ -29,6 +32,7 @@ const TaskElement = ({
   const [taskText, setTaskText] = useState(task.text);
   const [descText, setDescText] = useState(task.description);
   const [isHover, setIsHover] = useState(false);
+  const [isSubtaskHover, setIsSubtaskHover] = useState(false);
   const [loading, setLoading] = useState(false);
   const focusSubtaskIdRef = useRef(null);
 
@@ -92,6 +96,7 @@ const TaskElement = ({
   const handleInputKeyUp = async (e) => {
     if (e.key === "Enter" && isEditable) {
       onTaskChange({ ...task, text: taskText, description: descText });
+      e.target.blur();
       setTaskText("");
       setDescText("");
     }
@@ -105,7 +110,15 @@ const TaskElement = ({
   };
 
   const handleClick = (event) => {
-    event.stopPropagation();
+    if (isEditable) {
+      event.stopPropagation();
+    }
+  };
+
+  const handleFocus = (event) => {
+    if (isEditable) {
+      onExpand();
+    }
   };
 
   const onSubTaskChange = (newTask) => {
@@ -184,48 +197,34 @@ const TaskElement = ({
             placeholder="新建待办事项"
             onChange={handleInputChange}
             disabled={loading}
+            onFocus={handleFocus}
             onKeyUp={handleInputKeyUp}
             className="block w-full text-slate-800 bg-transparent focus:outline-none border-0 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600 p-0"
             style={{ boxShadow: "none" }}
           />
-          <span
-            className={`animate-spin ml-4 inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full ${
-              loading ? "" : "hidden"
-            }`}
-            role="status"
-            aria-label="loading"
-          >
-            <span className="sr-only">Loading...</span>
-          </span>
-          <div className={`hs-dropdown relative inline-flex [--trigger:hover]`}>
+          {loading ? (
+            <span
+              className={`animate-spin ml-4 inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full`}
+              role="status"
+              aria-label="loading"
+            >
+              <span className="sr-only">Loading...</span>
+            </span>
+          ) : (
             <AIICon
-              id="hs-dropdown-hover-event"
-              className={`hs-dropdown-toggle ml-4 w-5 h-5 cursor-pointer transition-colors ${
+              className={`ml-4 w-5 h-5 cursor-pointer transition-colors ${
                 (task.text || "").length > 0 || !isEditable
                   ? "text-blue-600 hover:text-blue-500"
                   : "hidden"
-              } ${loading ? "hidden" : ""}`}
+              }`}
+              onClick={onAIActionable}
             />
-            <div
-              className="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden bg-white shadow-md rounded-lg p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-              aria-labelledby="hs-dropdown-hover-event"
-            >
-              <a
-                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                href="#"
-                onClick={onAIActionable}
-              >
-                智能优化为可执行
-              </a>
-              <a
-                className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                href="#"
-                onClick={onAISubtasks}
-              >
-                智能生成子任务
-              </a>
-            </div>
-          </div>
+          )}
+          {isEditable && isExpanded && (
+            <kbd class="inline-flex justify-center items-center font-mono text-xs text-gray-400 rounded-md dark:text-gray-600">
+              <EneterIcon className="h-6 w-8" />
+            </kbd>
+          )}
         </div>
         <div
           className={`flex items-center ${
@@ -272,9 +271,27 @@ const TaskElement = ({
             </ul>
             <div className="flex items-center justify-end">
               {(task.subtasks || []).length === 0 && (
-                <ListIcon
-                  onClick={() => onCreateSubtask()}
-                  className="w-6 h-6 text-gray-500 p-.5 border border-transparent hover:border-gray-300 transition-colors rounded cursor-pointer"
+                <div
+                  className="flex items-center justify-end"
+                  onMouseEnter={() => setIsSubtaskHover(true)}
+                  onMouseLeave={() => setIsSubtaskHover(false)}
+                >
+                  <AIICon
+                    className={`${
+                      isSubtaskHover ? "w-5" : "w-0"
+                    } h-5 mr-1 text-blue-600 border border-transparent hover:text-blue-500 transition rounded cursor-pointer`}
+                    onClick={onAISubtasks}
+                  />
+                  <ListIcon
+                    onClick={() => onCreateSubtask()}
+                    className="w-6 h-6 text-gray-500 p-.5 border border-transparent hover:border-gray-300 transition-colors rounded cursor-pointer"
+                  />
+                </div>
+              )}
+              {!isPure && (
+                <DeleteIcon
+                  onClick={() => onTaskDelete(task.id)}
+                  className="w-6 h-6 text-gray-500 ml-2 p-.5 border border-transparent hover:border-gray-300 transition-colors rounded cursor-pointer"
                 />
               )}
             </div>
