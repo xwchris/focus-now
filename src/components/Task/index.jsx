@@ -110,7 +110,7 @@ const TaskElement = ({
   };
 
   const handleClick = (event) => {
-    if (isEditable) {
+    if (isEditable || isExpanded) {
       event.stopPropagation();
     }
   };
@@ -211,14 +211,16 @@ const TaskElement = ({
               <span className="sr-only">Loading...</span>
             </span>
           ) : (
-            <AIICon
-              className={`ml-4 w-5 h-5 cursor-pointer transition-colors ${
-                (task.text || "").length > 0 || !isEditable
-                  ? "text-blue-600 hover:text-blue-500"
-                  : "hidden"
-              }`}
-              onClick={onAIActionable}
-            />
+            !isEditable && (
+              <AIICon
+                className={`ml-4 w-5 h-5 cursor-pointer transition-colors ${
+                  (task.text || "").length > 0
+                    ? "text-blue-600 hover:text-blue-500"
+                    : "text-gray-500"
+                }`}
+                onClick={onAIActionable}
+              />
+            )
           )}
           {isEditable && isExpanded && (
             <kbd class="inline-flex justify-center items-center font-mono text-xs text-gray-400 rounded-md dark:text-gray-600">
@@ -279,7 +281,11 @@ const TaskElement = ({
                   <AIICon
                     className={`${
                       isSubtaskHover ? "w-5" : "w-0"
-                    } h-5 mr-1 text-blue-600 border border-transparent hover:text-blue-500 transition rounded cursor-pointer`}
+                    } h-5 mr-1 border border-transparent transition-all rounded cursor-pointer ${
+                      (task.text || "").length > 0
+                        ? "text-blue-600 hover:text-blue-500"
+                        : "text-gray-500"
+                    }`}
                     onClick={onAISubtasks}
                   />
                   <ListIcon
