@@ -34,7 +34,7 @@ const Sidebar = () => {
             </Link>
           </div>
 
-          <div className="hs-tooltip inline-block [--placement:right]">
+          {/* <div className="hs-tooltip inline-block [--placement:right]">
             <Link
               to="/tomorrow"
               className="hs-tooltip-toggle w-[2.375rem] h-[2.375rem] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
@@ -62,7 +62,7 @@ const Sidebar = () => {
                 以后待办
               </span>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
