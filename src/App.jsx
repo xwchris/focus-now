@@ -14,7 +14,7 @@ function App() {
     >
       <section className="w-[900px] mx-auto flex">
         <SideBar />
-        <main className="flex-1 mx-20">
+        <main className="flex-1">
           <Routes>
             <Route exact path="/" element={<Today />} />
           </Routes>
