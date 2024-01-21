@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 var db = new Dexie("Tasks");
-db.version(2).stores({
-  tasks: "++id,text,complete,created_at,updated_at,subtasks"
+db.version(4).stores({
+  tasks: "++id,text,originalText,complete,created_at,updated_at,subtasks"
 });
 
 export function putTask(task) {

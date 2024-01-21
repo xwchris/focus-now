@@ -4,8 +4,6 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import Task from "../Task";
 import FocusPanel from "../FocusPanel";
 
-const emptyTask = { id: -1, text: "", completed: false };
-
 const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [launchTask, setLaunchTask] = useState(null);
@@ -45,22 +43,16 @@ const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
     // onTaskChange(launchTask);
   };
 
-  const realTasks = useMemo(() => [...tasks, emptyTask], [tasks]);
-
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="tasks">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {realTasks.map((task, index) => (
+              {tasks.map((task, index) => (
                 <Task
                   onTaskChange={onTaskChange}
                   onTaskDelete={onTaskDelete}
-                  isExpanded={task.id === expandedTaskId}
-                  onExpand={() => setExpandedTaskId(task.id)}
-                  onCloseExpand={() => setExpandedTaskId(null)}
-                  onLaunch={() => setLaunchTask(task)}
                   key={task.id}
                   task={task}
                   index={index}
@@ -71,14 +63,14 @@ const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
           )}
         </Droppable>
       </DragDropContext>
-      {launchTask && (
+      {/* {launchTask && (
         <FocusPanel
           task={launchTask}
           onTaskChange={onTaskChange}
           onClose={() => setLaunchTask(null)}
           onChangeTaskTime={onChangeTaskTime}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -21,6 +21,7 @@ class Service {
   }
 
   sendMessages(data, onListen) {
+    console.log(data);
     return fetch(
       "/task-ai",
       data,

@@ -13,7 +13,7 @@ export function useTasks() {
 
   const onTaskChange = (newTask) => {
     const newTasks = [...tasks];
-    if (newTask.id === -1) {
+    if (!newTask.id) {
       const task = { ...newTask, id: uuid() };
       putTask(task);
       newTasks.push(task);
@@ -34,5 +34,5 @@ export function useTasks() {
     setTasks(newTasks);
   };
 
-  return { tasks, onTaskChange, onTaskDelete }
+  return { tasks, onTaskChange, setTasks, onTaskDelete }
 }
