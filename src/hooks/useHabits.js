@@ -1,12 +1,12 @@
 
-import { deleteTask, getAllTasks, putTask, uuid } from "../db";
+import { deleteHabit, getAllHabits, putHabit, uuid } from "../db";
 import { useState, useEffect } from 'react';
 
-export function useTasks() {
+export function useHabits() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    getAllTasks().then((tasks) => {
+    getAllHabits().then((tasks) => {
       setTasks(tasks);
     });
   }, []);
@@ -15,21 +15,21 @@ export function useTasks() {
     const newTasks = [...tasks];
     if (!newTask.id) {
       const task = { ...newTask, id: uuid() };
-      putTask(task);
+      putHabit(task);
       newTasks.unshift(task);
     } else {
       const index = newTasks.findIndex((task) => task.id === newTask.id);
       newTasks[index] = newTask;
 
       // update task
-      putTask(newTask);
+      putHabit(newTask);
       setTasks(newTasks);
     }
     setTasks(newTasks);
   };
 
   const onTaskDelete = (taskId) => {
-    deleteTask(taskId);
+    deleteHabit(taskId);
     const newTasks = tasks.filter((t) => t.id !== taskId);
     setTasks(newTasks);
   };

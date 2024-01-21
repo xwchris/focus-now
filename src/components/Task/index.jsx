@@ -12,10 +12,19 @@ import {
 } from "@chakra-ui/react";
 import cs from "classnames";
 import MoreIcon from "./icons/more.svg?react";
+import RocketIcon from "./icons/rocket.svg?react";
 import Editor from "../Editor";
 import "./index.css";
 
-const Task = ({ task, index, onTaskChange, onTaskDelete, ...props }) => {
+const Task = ({
+  task,
+  index,
+  isLaunch,
+  onTaskChange,
+  onTaskDelete,
+  setLaunchTask,
+  ...props
+}) => {
   const onSubTaskChange = ({ index, completed }) => {
     const subtasks = [...(task.subtasks || [])];
     const subtask = subtasks[index];
@@ -40,13 +49,13 @@ const Task = ({ task, index, onTaskChange, onTaskDelete, ...props }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           onMouseEnter={() => {
-            setHover(true);
+            if (!isLaunch) setHover(true);
           }}
           onMouseLeave={() => {
             setHover(false);
           }}
           className={cs(
-            "relative box-border py-2 px-3 rounded transition-colors",
+            "relative box-border py-2 px-5 rounded transition-colors",
             {
               "hover:bg-gray-700": !isEditing,
             }
@@ -60,7 +69,7 @@ const Task = ({ task, index, onTaskChange, onTaskDelete, ...props }) => {
             />
           ) : (
             <>
-              <div className="flex items-start">
+              <div className="flex items-start relative">
                 <Checkbox
                   isChecked={task.completed}
                   className="flex-1 items-start"
@@ -68,33 +77,47 @@ const Task = ({ task, index, onTaskChange, onTaskDelete, ...props }) => {
                     onTaskChange({ ...task, completed: e.target.checked })
                   }
                 >
-                  <span className={cs({ "line-through": task.completed })}>
+                  <span
+                    className={cs("leading-6", {
+                      "line-through": task.completed,
+                    })}
+                  >
                     {task.text || "暂无内容"}
                   </span>
                 </Checkbox>
-                <Menu>
-                  <MenuButton>
-                    <MoreIcon
-                      as={Button}
-                      className={cs(
-                        "ml-3 w-6 h-6 text-slate-200 flex-shrink-0",
-                        {
-                          hidden: !hover,
-                        }
-                      )}
-                    />
-                  </MenuButton>
-                  <Portal>
-                    <MenuList>
-                      <MenuItem onClick={() => setIsEditing(true)}>
-                        编辑
-                      </MenuItem>
-                      <MenuItem onClick={() => onTaskDelete(task.id)}>
-                        删除
-                      </MenuItem>
-                    </MenuList>
-                  </Portal>
-                </Menu>
+                <div
+                  className={cs(
+                    "absolute flex items-center z-10 right-0 bg-slate-700 flex-shrink-0 ",
+                    {
+                      hidden: !hover,
+                    }
+                  )}
+                >
+                  <RocketIcon
+                    onClick={() => setLaunchTask(task)}
+                    className={cs(
+                      "ml-3 w-4 h-4 text-white hover:text-orange-600 transition-colors"
+                    )}
+                  />
+                  <Menu>
+                    <MenuButton className="text-white hover:text-orange-600">
+                      <MoreIcon
+                        // as={Button}
+                        className={cs("ml-3 w-6 h-6 transition-colors")}
+                      />
+                    </MenuButton>
+                    <Portal>
+                      <MenuList>
+                        <MenuItem onClick={() => setIsEditing(true)}>
+                          编辑
+                        </MenuItem>
+                        <MenuItem onClick={() => onTaskDelete(task.id)}>
+                          删除
+                        </MenuItem>
+                      </MenuList>
+                    </Portal>
+                  </Menu>
+                </div>
               </div>
               <div className="px-4">
                 <ul>

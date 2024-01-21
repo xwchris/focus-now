@@ -27,7 +27,7 @@ function formatValue(value = "") {
   return { text: title.trim(), subtasks };
 }
 
-const Editor = ({ task, onTaskChange, onClose = () => {} }) => {
+const Editor = ({ task, onTaskChange, placeholder, onClose = () => {} }) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +50,7 @@ const Editor = ({ task, onTaskChange, onClose = () => {} }) => {
       ...formatValue(value),
       originalText: value,
     };
+
     onTaskChange(newTask);
     setValue("");
     onClose();
@@ -81,11 +82,11 @@ const Editor = ({ task, onTaskChange, onClose = () => {} }) => {
     <div className="rounded border-2 border-gray-700 px-3 py-2">
       <TextareaAutosize
         value={value}
-        minRows={4}
-        placeholder="请输入你的待办事项"
+        minRows={3}
+        placeholder={placeholder}
         onChange={handleChange}
         style={{ boxShadow: "none" }}
-        className="w-full border-0 text-sm outline-none bg-transparent focus:outline-none px-0 resize-none"
+        className="w-full border-0 text-base outline-none bg-transparent focus:outline-none px-0 resize-none"
       />
       <div className="flex justify-between">
         {loading ? (
@@ -95,13 +96,13 @@ const Editor = ({ task, onTaskChange, onClose = () => {} }) => {
           </div>
         ) : (
           <div className="flex-1 flex items-center">
-            <AIIcon
-              onClick={onAIPerf}
-              className="mr-2 w-6 h-6 text-white rounded p-1 hover:bg-slate-600 cursor-pointer transition-colors"
-            />
             <ListIcon
               onClick={onAppendSubtask}
               className="w-6 h-6 text-white rounded p-1 hover:bg-slate-600 cursor-pointer transition-colors"
+            />
+            <AIIcon
+              onClick={onAIPerf}
+              className="ml-2 w-6 h-6 text-white rounded p-1 hover:bg-slate-600 cursor-pointer transition-colors"
             />
           </div>
         )}

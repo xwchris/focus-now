@@ -4,9 +4,15 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import Task from "../Task";
 import FocusPanel from "../FocusPanel";
 
-const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
+const Tasks = ({
+  tasks,
+  launchTask,
+  setLaunchTask,
+  setTasks,
+  onTaskChange,
+  onTaskDelete,
+}) => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
-  const [launchTask, setLaunchTask] = useState(null);
 
   useEffect(() => {
     const handleClick = () => {
@@ -34,14 +40,9 @@ const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
     setTasks(items);
   };
 
-  const onChangeTaskTime = (newTime) => {
-    const targetTask = tasks.find((task) => task.id === launchTask.id);
-    if (targetTask) {
-      targetTask.focusSeconds = newTime;
-    }
-    // TODO - this is not working
-    // onTaskChange(launchTask);
-  };
+  const realTask = launchTask
+    ? tasks.filter((t) => t.id === launchTask.id)
+    : tasks;
 
   return (
     <>
@@ -49,12 +50,14 @@ const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
         <Droppable droppableId="tasks">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {tasks.map((task, index) => (
+              {realTask.map((task, index) => (
                 <Task
                   onTaskChange={onTaskChange}
                   onTaskDelete={onTaskDelete}
+                  setLaunchTask={setLaunchTask}
                   key={task.id}
                   task={task}
+                  isLaunch={launchTask && launchTask.id === task.id}
                   index={index}
                 />
               ))}
@@ -63,14 +66,6 @@ const Tasks = ({ tasks, setTasks, onTaskChange, onTaskDelete }) => {
           )}
         </Droppable>
       </DragDropContext>
-      {/* {launchTask && (
-        <FocusPanel
-          task={launchTask}
-          onTaskChange={onTaskChange}
-          onClose={() => setLaunchTask(null)}
-          onChangeTaskTime={onChangeTaskTime}
-        />
-      )} */}
     </>
   );
 };
